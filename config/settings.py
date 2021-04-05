@@ -40,8 +40,14 @@ DJANGO_APPS = [
     "django.contrib.staticfiles",
 ]
 
+THIRD_PARTY_APPS = ["django_countries"]
+
 # 내가 만든 app
-PROJECT_APPS = ["users.apps.UsersConfig"]
+PROJECT_APPS = [
+    "core.apps.CoreConfig",
+    "users.apps.UsersConfig",
+    "rooms.apps.RoomsConfig",
+]
 
 INSTALLED_APPS = DJANGO_APPS + PROJECT_APPS
 
@@ -126,5 +132,5 @@ USE_TZ = True
 STATIC_URL = "/static/"
 
 # 장고에서 제공하는 user모델이 맞지 않을 수 있기 때문에 커스텀마이징
-
+# 우리가 만든 user admin (기본적으로 제공되는것만 쓸려면 안써도 됨 (ex.avatar,birthday,bio 등등))
 AUTH_USER_MODEL = "users.User"
