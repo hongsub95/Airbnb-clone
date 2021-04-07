@@ -14,7 +14,9 @@ class Message(core_models.TimeStampedModel):
     user = models.ForeignKey(
         "users.User", on_delete=models.CASCADE
     )  # message를 보내는사람, 즉, conversation을 만든사람
-    Conversation = models.ForeignKey("Conversation", on_delete=models.CASCADE)
+    Conversation = models.ForeignKey(
+        "Conversation", related_name="conversations", on_delete=models.CASCADE
+    )
 
     def __str__(self):
         return f"{self.user} says:{self.message}"
