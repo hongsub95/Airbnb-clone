@@ -40,7 +40,7 @@ DJANGO_APPS = [
     "django.contrib.staticfiles",
 ]
 
-THIRD_PARTY_APPS = ["django_countries", "cities"]
+THIRD_PARTY_APPS = ["django_countries", "django_seed"]
 
 # 내가 만든 app
 PROJECT_APPS = [
