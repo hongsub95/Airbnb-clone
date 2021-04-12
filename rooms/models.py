@@ -21,7 +21,7 @@ class RoomType(AbstractItem):
     """ RoomType Model Definition """
 
     class Meta:
-        verbose_name = "Room Type"
+        verbose_name = "Room Type"  # 소문자형 방지(장고는 기본값으로 소문자형으로 나옴)
 
 
 class Amenity(AbstractItem):
@@ -29,7 +29,7 @@ class Amenity(AbstractItem):
     """ Amenity Model Definition """
 
     class Meta:
-        verbose_name_plural = "Amenity"
+        verbose_name_plural = "Amenity"  # 복수형 방지 (장고는 기본값으로 복수로 나옴)
 
 
 class Facility(AbstractItem):
@@ -99,6 +99,6 @@ class Room(core_models.TimeStampedModel):
         try:
             for review in all_reviews:
                 all_ratings += review.rating_average()
-            return all_ratings / len(all_reviews)
+            return round(all_ratings / len(all_reviews), 1)
         except ZeroDivisionError:
             return 0

@@ -11,7 +11,7 @@ class Command(BaseCommand):
         )
      """
 
-    def handle(self, *argu, **options):
+    def handle(self, *args, **options):
         amenities = [
             "Air conditioning",
             "Alarm Clock",
