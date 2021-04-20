@@ -30,7 +30,11 @@ class User(AbstractUser):
     birthday = models.DateField(null=True, blank=True)
     avatar = models.ImageField(upload_to="avatars", blank=True)
     gender = models.CharField(choices=GENDER_CHOICES, max_length=10, blank=True)
-    language = models.CharField(choices=LANGUAGE_CHOICE, max_length=2, blank=True)
-    currency = models.CharField(choices=CURRENCY_CHOICE, max_length=3, blank=True)
+    language = models.CharField(
+        choices=LANGUAGE_CHOICE, max_length=2, blank=True, default=LANGUAGE_KOREAN
+    )
+    currency = models.CharField(
+        choices=CURRENCY_CHOICE, max_length=3, blank=True, default=CURRENCY_KRW
+    )
     bio = models.TextField(blank=True)
     superhost = models.BooleanField(default=False)

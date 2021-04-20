@@ -5,7 +5,7 @@ from reviews import models as review_models
 from users import models as user_models
 from rooms import models as room_models
 
-NAME = "lists"
+NAME = "reviews"
 
 
 class Command(BaseCommand):
