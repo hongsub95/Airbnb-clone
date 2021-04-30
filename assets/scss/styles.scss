@@ -1,7 +1,7 @@
 @tailwind base;
 @tailwind components;
 
-.search-box{
+.search-box {
     transition: box-shadow 0.2s linear;
 }
 
@@ -13,6 +13,33 @@
     &:hover{
         @apply border-gray-600;
     }
+}
+
+.btn {
+    @apply text-center rounded-sm py-5 text-lg font-bold w-full;
+}
+
+input{
+    @apply rounded-sm py-5 text-lg font-bold w-full text-left border border-gray-600 px-5;
+    &:focus{
+        @apply outline-none border-teal-500;
+    }
+}
+
+form {
+    .input{
+        @apply mb-3;
+        &.has_error{
+            input{
+                @apply bg-red-200 border-gray-400;
+                :focus{
+                    @apply border-gray-600;
+                }
+            }
+
+        }
+    }
+    
 }
 
 @tailwind utilities;
