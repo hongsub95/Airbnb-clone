@@ -1,0 +1,18 @@
+<!-- action이 없는 이유는 action은 지금 페이지(Current URL)에서 다른페이지(other URL)로 보낼때 쓰지만 회원가입할때 오류나면 페이지를 그대로 둬도 되기때문에 action이 필요없음-->
+
+<form method="POST" class="w-full">
+    {% csrf_token %}
+            
+    {% if form.non_field_errors %}
+        {% for error in form.non_field_errors %}
+            <span class="text-red-600 font-medium text-sm">{{error}}</span>
+        {% endfor %}
+    {% endif %}
+
+    {% for field in form %}
+        {% include 'mixins/auth/form_input.html' with field=field %}
+    {% endfor %}
+
+            
+    <button class="btn bg-red-400 text-white">{{cta}}</button>
+</form>
