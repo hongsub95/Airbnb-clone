@@ -14,7 +14,7 @@
         {% endfor %}
         </div>
 
-        <div class="flex justify-center mx-auto container">
+        <div class="flex items-center justify-center mx-auto container">
             {% if page_obj.has_previous %}
                 <a href="?page={{page_obj.previous_page_number}}" class="text-teal-400">
                     <i class="fas fa-arrow-left fa-lg"></i>
@@ -29,7 +29,7 @@
                 </a>
             {% endif %}
         </div>
-        <div class="flex justify-center mx-auto container">
+        <div class="flex items-center justify-center mx-auto container">
             {% for page in page_obj.paginator.page_range %}
             <span class="text-lg font-medium mx-1">{{page}}</span>
         {% endfor %}

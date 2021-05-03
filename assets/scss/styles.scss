@@ -17,13 +17,29 @@
 
 .btn {
     @apply text-center rounded-sm py-5 text-lg font-bold w-full;
+    
 }
 
-input{
+.btn-link{
+    @apply text-center rounded-sm py-3 text-lg font-bold w-full text-white bg-red-500;
+}
+
+input,
+textarea,
+select {
     @apply rounded-sm py-5 text-lg font-bold w-full text-left border border-gray-600 px-5;
     &:focus{
         @apply outline-none border-teal-500;
     }
+}
+
+textarea{
+    resize:none;
+    height:100px;
+}
+select{
+    height:50px;
+    padding:5px;
 }
 
 form {
@@ -77,5 +93,7 @@ form {
         @apply bg-yellow-500;
     }
 }
-
+.border-section{
+    @apply border-b border-gray-500 pb-8 mt-8;
+}
 @tailwind utilities;
