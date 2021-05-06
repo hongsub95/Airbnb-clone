@@ -1,7 +1,12 @@
-from django.views.generic import ListView, DetailView, View, UpdateView
-from django.shortcuts import render
+from django.views.generic import ListView, DetailView, View, UpdateView, FormView
+from django.http import Http404
+from django.shortcuts import render, redirect, reverse
 from django.core.paginator import Paginator
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
+from users import mixins as user_mixins
 from . import models, forms
+from django.contrib.messages.views import SuccessMessageMixin
 
 
 class HomeView(ListView):
@@ -103,7 +108,7 @@ class SearchView(View):
         return render(request, "rooms/search.html", {"form": form})
 
 
-class EditRoomView(UpdateView):
+class EditRoomView(user_mixins.LoggedInOnlyView, UpdateView):
     model = models.Room
     template_name = "rooms/room_edit.html"
     fields = (
@@ -126,110 +131,70 @@ class EditRoomView(UpdateView):
         "house_rules",
     )
 
+    def get_object(self, queryset=None):
+        room = super().get_object(queryset=queryset)
+        if room.host.pk != self.request.user.pk:
+            raise Http404
+        return room
 
-"""
-#FBV(Function Based)
 
-def room_detail(request, pk):
+class RoomPhotosView(user_mixins.LoggedInOnlyView, RoomDetail):
+    model = models.Room
+    template_name = "rooms/room_photos.html"
+
+    def get_object(self, queryset=None):
+        room = super().get_object(queryset=queryset)
+        if room.host.pk != self.request.user.pk:
+            raise Http404
+        return room
+
+
+@login_required
+def delete_photo(request, room_pk, photo_pk):
+    user = request.user
     try:
-        room = models.Room.objects.get(pk=pk)
-        return render(request, "rooms/detail.html", {"room": room})
+        room = models.Room.objects.get(pk=room_pk)
+        if room.host.pk != user.pk:
+            messages.error(request, "Can't delete that photo")
+        else:
+            models.Photo.objects.filter(pk=photo_pk).delete()
+            messages.success(request, "Photo delete")
+        return redirect(reverse("rooms:photos", kwargs={"pk": room_pk}))
     except models.Room.DoesNotExist:
-        raise Http404()
-
-"""
+        return redirect(reverse("core:home"))
 
 
-"""
-def search(request):
-    city = request.GET.get("city", "AnyWhere")
-    city = str.capitalize(city)
-    country = request.GET.get("country", "KR")
-    room_type = int(request.GET.get("room_type", 0))
-    price = int(request.GET.get("price", 0))
-    guests = int(request.GET.get("guests", 0))
-    bedrooms = int(request.GET.get("bedrooms", 0))
-    beds = int(request.GET.get("beds", 0))
-    baths = int(request.GET.get("baths", 0))
-    instant = bool(request.GET.get("instant", False))
-    superhost = bool(request.GET.get("superhost", False))
-    s_amenities = request.GET.getlist("amenities")
-    s_facilities = request.GET.getlist("facilities")
+class EditPhotoView(user_mixins.LoggedInOnlyView, SuccessMessageMixin, UpdateView):
+    model = models.Photo
+    template_name = "rooms/edit_photo.html"
+    pk_url_kwarg = "photo_pk"
+    success_message = "Photo Updated"
+    fields = ("caption",)
 
-    # request로 오는 것들
-    form = {
-        "city": city,
-        "s_country": country,
-        "s_room_type": room_type,
-        "price": price,
-        "guests": guests,
-        "bedrooms": bedrooms,
-        "beds": beds,
-        "baths": baths,
-        "s_amenities": s_amenities,
-        "s_facilities": s_facilities,
-        "instant": instant,
-        "superhost": superhost,
-    }
+    def get_success_url(self):
+        room_pk = self.kwargs.get("room_pk")
+        return reverse("rooms:photos", kwargs={"pk": room_pk})
 
-    room_types = models.RoomType.objects.all()
-    amenities = models.Amenity.objects.all()
-    facilities = models.Facility.objects.all()
-    # 데이터 베이스로 오는것들
-    choices = {
-        "countries": countries,
-        "room_types": room_types,
-        "amenities": amenities,
-        "facilities": facilities,
-    }
 
-    filter_args = {}
-    if city != "Anywhere":
-        filter_args["city__startswith"] = city
+class AddPhotoView(user_mixins.LoggedInOnlyView, SuccessMessageMixin, FormView):
+    template_name = "rooms/photo_create.html"
+    form_class = forms.CreatePhotoForm
 
-    filter_args["country"] = country
+    def form_valid(self, form):
+        pk = self.kwargs.get("pk")
+        form.save(pk)
+        messages.success(self.request, "Photo uploaded")
+        return redirect(reverse("rooms:photos", kwargs={"pk": pk}))
 
-    if room_type != 0:
-        filter_args["room_type__pk"] = room_type
 
-    if guests != 0:
-        filter_args["guests__gte"] = guests
+class CreateRoomView(user_mixins.LoggedInOnlyView, FormView):
+    form_class = forms.CreateRoomForm
+    template_name = "rooms/room_create.html"
 
-    if price != 0:
-        filter_args["price__lte"] = price
-
-    if bedrooms != 0:
-        filter_args["bedrooms__gte"] = bedrooms
-
-    if beds != 0:
-        filter_args["beds__gte"] = beds
-
-    if baths != 0:
-        filter_args["baths__gte"] = baths
-
-    if instant is True:
-        filter_args["instant_book"] = True
-
-    if superhost is True:
-        filter_args["host__superhost"] = True
-
-    rooms = models.Room.objects.filter(**filter_args)
-
-    if len(s_amenities) > 0:
-        for s_amenity in s_amenities:
-            rooms = rooms.filter(amenities__pk=int(s_amenity))
-
-    if len(s_facilities) > 0:
-        for s_facility in s_facilities:
-            rooms = rooms.filter(facilities__pk=int(s_facility))
-
-    return render(
-        request,
-        "rooms/search.html",
-        {
-            **form,
-            **choices,
-            "rooms": rooms,
-        },
-    )
-"""
+    def form_valid(self, form):
+        room = form.save()
+        room.host = self.request.user
+        room.save()
+        form.save_m2m()
+        messages.success(self.request, "Room Uploaded")
+        return redirect(reverse("rooms:detail", kwargs={"pk": room.pk}))
