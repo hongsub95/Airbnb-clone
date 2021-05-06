@@ -17,11 +17,11 @@
                     <img class="w-12" src="{% static 'img/logo.png' %}" />
                 </a>
                 {% block search-bar %}
-                <form method="get" action ="{% url "rooms:search" %}" class="w-9/12">
-                    <input class="search-box border w-full px-5 font-medium text-gray-900 placeholder-gray-700 py-3 rounded-lg w-64 shadow-md hover:shadow-lg focus:outline-none" 
-                    name='city' 
-                    placeholder="{% trans "Search by City" %}"/>
-                </form>
+                    <form method="get" action ="{% url "rooms:search" %}" class="w-9/12">
+                        <input class="search-box border w-full px-5 font-medium text-gray-900 placeholder-gray-700 py-3 rounded-lg w-64 shadow-md hover:shadow-lg focus:outline-none" 
+                        name='city' 
+                        placeholder="{% trans "Search by City" %}"/>
+                    </form>
                 {% endblock search-bar %}
             </div>
         {% include "partials/nav.html" %}
@@ -35,11 +35,9 @@
             const handleLangChance = () =>{
                 const selected =langSelect.value;
                 fetch(`{% url 'users:switch_language' %}?lang=${selected}`).then(() => window.location.reload());
-                window.location.reload();
             }
-
-            langSelect.addEventListner("change", handleLangChance)
+            langSelect.addEventListener("change", handleLangChance);
         </script>
 
     </body>
-    </html>
+</html>
