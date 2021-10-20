@@ -11,6 +11,7 @@ django-cities = "*"
 django-dotenv = "*"
 requests = "*"
 pipenv-to-requirements = "*"
+psycopg = "*"
 
 [dev-packages]
 black = "*"
@@ -18,7 +19,7 @@ flake8 = "*"
 awsebcli = "*"
 
 [requires]
-python_version = "3.8"
+python_version = "3.8.5"
 
 [pipenv]
 allow_prereleases = true
