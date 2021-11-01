@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import UserManager
 
 
 class CustomModelManager(models.Manager):
@@ -23,3 +24,7 @@ class CustomModelManager(models.Manager):
         else:
             email = email_name + "@" + domain_part.lower()
         return email
+
+
+class CustomUserManager(CustomModelManager, UserManager):
+    pass
