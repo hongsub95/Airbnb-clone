@@ -11,6 +11,8 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 """
 
 import os
+import sentry_sdk
+from sentry_sdk.integrations.django import DjangoIntegration
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -20,7 +22,9 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get("DJANGO_SECRET")
+SECRET_KEY = os.environ.get(
+    "DJANGO_SECRET", "!5$Xo8tdrng*Pb1bk$F%O4"
+)  # 전자는 aws에서 후자는 개발서버에서
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = bool(os.environ.get("DEBUG"))
@@ -176,3 +180,11 @@ LOCALE_PATHS = (os.path.join(BASE_DIR, "locale"),)
 
 # Language
 LANGUAGE_COOKIE_NAME = "django_language"
+
+# Sentry (에러가 날 경우 에러에 대한 정보를 줌)
+if not DEBUG:
+    sentry_sdk.init(
+        dsn=os.environ.get("SENTRY_URL"),
+        integrations=[DjangoIntegration()],
+        send_default_pii=True,  # 로그인 된 상태인 유저가 왜 에러가 났는지 도움을 줌
+    )

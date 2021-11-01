@@ -13,6 +13,7 @@ requests = "*"
 pipenv-to-requirements = "*"
 psycopg = "*"
 django-seed = "*"
+sentry-sdk = "*"
 
 [dev-packages]
 black = "*"
