@@ -12,6 +12,7 @@ django-dotenv = "*"
 requests = "*"
 pipenv-to-requirements = "*"
 psycopg = "*"
+django-seed = "*"
 
 [dev-packages]
 black = "*"
