@@ -14,6 +14,7 @@ pipenv-to-requirements = "*"
 psycopg = "*"
 django-seed = "*"
 sentry-sdk = "*"
+django-storages = "*"
 
 [dev-packages]
 black = "*"

@@ -44,7 +44,7 @@ DJANGO_APPS = [
     "django.contrib.staticfiles",
 ]
 
-THIRD_PARTY_APPS = ["django_countries", "django_seed"]
+THIRD_PARTY_APPS = ["django_countries", "django_seed", "storages"]
 
 
 # 내가 만든 app
@@ -183,6 +183,13 @@ LANGUAGE_COOKIE_NAME = "django_language"
 
 # Sentry (에러가 날 경우 에러에 대한 정보를 줌)
 if not DEBUG:
+
+    DEFAULT_FILE_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
+    STATICFILES_STORAGE = "storages.backends.s3boto3.S3StaticStorage"
+    AWS_S3_ACCESS_KEY_ID = ""
+    AWS_S3_SECRET_ACCESS_KEY = ""
+    AWS_STORAGE_BUCKET_NAME = "airbnb-clone-hongsub"
+
     sentry_sdk.init(
         dsn=os.environ.get("SENTRY_URL"),
         integrations=[DjangoIntegration()],
