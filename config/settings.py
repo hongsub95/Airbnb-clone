@@ -189,7 +189,7 @@ if not DEBUG:
     AWS_S3_ACCESS_KEY_ID = os.envirion.get("AWS_S3_ACCESS_KEY_ID")
     AWS_S3_SECRET_ACCESS_KEY = os.envirion.get("AWS_S3_SECRET_ACCESS_KEY")
     AWS_STORAGE_BUCKET_NAME = "airbnb-clone-hongsub"
-
+    AWS_DEFAULT_ACL = "public-read"
     sentry_sdk.init(
         dsn=os.environ.get("SENTRY_URL"),
         integrations=[DjangoIntegration()],
