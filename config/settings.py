@@ -180,16 +180,21 @@ LOCALE_PATHS = (os.path.join(BASE_DIR, "locale"),)
 # Language
 LANGUAGE_COOKIE_NAME = "django_language"
 
-# Sentry (에러가 날 경우 에러에 대한 정보를 줌)
+
 if not DEBUG:
     # static 파일들(사진등등)을 s3스토리지에 따로 보관함
-    DEFAULT_FILE_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
-    STATICFILES_STORAGE = "storages.backends.s3boto3.S3StaticStorage"
+    DEFAULT_FILE_STORAGE = "config.custom_storages.UploadStorage"
+    STATICFILES_STORAGE = "config.custom_storages.StaticStorage"
     AWS_S3_ACCESS_KEY_ID = os.environ.get("AWS_S3_ACCESS_KEY_ID")
     AWS_S3_SECRET_ACCESS_KEY = os.environ.get("AWS_S3_SECRET_ACCESS_KEY")
     AWS_STORAGE_BUCKET_NAME = "airbnb-clone-hongsub"
     AWS_DEFAULT_ACL = "public-read"
 
+    # aws url을 써야하므로 overwrite해야함
+    AWS_S3_CUSTOM_DOMAIN = f"{AWS_STORAGE_BUCKET_NAME}.s3.ap-northeast-2.amazonaws.com"
+    STATIC_URL = f"https://{AWS_S3_CUSTOM_DOMAIN}/static"
+
+    # Sentry (에러가 날 경우 에러에 대한 정보를 줌)
     sentry_sdk.init(
         dsn=os.environ.get("SENTRY_URL"),
         integrations=[DjangoIntegration()],
