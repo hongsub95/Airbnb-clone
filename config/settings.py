@@ -151,8 +151,6 @@ USE_TZ = False
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
 STATIC_URL = "/static/"
-STATIC_ROOT = "static"
-
 STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
 
 # 장고에서 제공하는 user모델이 맞지 않을 수 있기 때문에 커스텀마이징
