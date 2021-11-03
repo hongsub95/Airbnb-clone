@@ -20,6 +20,7 @@ django-dotenv==1.4.2
 django-model-utils==4.1.1
 django==2.2.5
 django-seed==0.1.9
+django-storages==1.12
 filelock==3.0.12
 idna==2.10 ; python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3'
 pbr==5.6.0 ; python_version >= '2.6'
@@ -36,4 +37,6 @@ tqdm==4.60.0 ; python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2,
 urllib3==1.26.4 ; python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3, 3.4' and python_version < '4'
 virtualenv-clone==0.5.4 ; python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3'
 virtualenv==20.4.6 ; python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3'
-sentry-sdk
+sentry-sdk ==1.4.3
+boto3=1.18.56
+
