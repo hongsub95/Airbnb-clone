@@ -192,7 +192,7 @@ if not DEBUG:
 
     # aws url을 써야하므로 overwrite해야함
     AWS_S3_CUSTOM_DOMAIN = f"{AWS_STORAGE_BUCKET_NAME}.s3.ap-northeast-2.amazonaws.com"
-    STATIC_URL = f"https://{AWS_S3_CUSTOM_DOMAIN}/static"
+    STATIC_URL = f"https://{AWS_S3_CUSTOM_DOMAIN}/static/"
 
     # Sentry (에러가 날 경우 에러에 대한 정보를 줌)
     sentry_sdk.init(
