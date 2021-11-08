@@ -73,7 +73,7 @@ def complete_verification(request, key):
 
 def github_login(request):
     client_id = os.environ.get("GH_ID")
-    redirect_uri = "http://127.0.0.1:8000/users/login/github/callback"
+    redirect_uri = "http://airbnb-clone.eba-mbuktp8e.ap-northeast-2.elasticbeanstalk.com/users/login/github/callback"
     return redirect(
         f"https://github.com/login/oauth/authorize?client_id={client_id}&redirec_uri={redirect_uri}&scope=read:user"
     )
