@@ -214,7 +214,7 @@ def kakao_callback(request):
 
 def Naver_login(request):
     client_id = os.environ.get("NAVER_ID")
-    redirect_uri = "http://127.0.0.1:8000/users/login/naver/callback"
+    redirect_uri = "http://airbnb-clone.eba-mbuktp8e.ap-northeast-2.elasticbeanstalk.com/users/login/naver/callback"
     state = django.middleware.csrf.get_token(request)
     return redirect(
         f"https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id={client_id}&redirect_uri={redirect_uri}&state={state}"
