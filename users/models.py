@@ -37,11 +37,13 @@ class User(AbstractUser):
     LOGIN_EMAIL = "email"
     LOGIN_GITHUB = "github"
     LOGIN_KAKAO = "kakao"
+    LOGIN_NAVER = "naver"
 
     LOGIN_CHOICES = (
         (LOGIN_EMAIL, "Email"),
         (LOGIN_GITHUB, "Github"),
         (LOGIN_KAKAO, "Kakao"),
+        (LOGIN_NAVER, "naver"),
     )
 
     CURRENCY_CHOICE = ((CURRENCY_USD, "usd"), (CURRENCY_KRW, "krw"))

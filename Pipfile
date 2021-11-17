@@ -16,6 +16,7 @@ django-seed = "*"
 sentry-sdk = "*"
 django-storages = "*"
 boto3 = "*"
+django-allauth = "*"
 
 [dev-packages]
 black = "*"

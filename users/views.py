@@ -1,9 +1,12 @@
 import os
+import sys
 import requests
+import django.middleware.csrf
+import urllib.request
 from django.contrib.auth.views import PasswordChangeView
 from django.views.generic import FormView, DetailView, UpdateView
 from django.utils import translation
-from django.shortcuts import render, redirect, reverse
+from django.shortcuts import redirect, reverse
 from django.urls import reverse_lazy
 from django.http import HttpResponse
 from django.contrib.auth import authenticate, login, logout
@@ -205,6 +208,67 @@ def kakao_callback(request):
         login(request, user)
         return redirect(reverse("core:home"))
     except KakaoException as e:
+        messages.error(request, e)
+        return redirect(reverse("users:login"))
+
+
+def Naver_login(request):
+    client_id = os.environ.get("NAVER_ID")
+    redirect_uri = "http://127.0.0.1:8000/users/login/naver/callback"
+    state = django.middleware.csrf.get_token(request)
+    return redirect(
+        f"https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id={client_id}&redirect_uri={redirect_uri}&state={state}"
+    )
+
+
+class NaverException(Exception):
+    pass
+
+
+def Naver_callback(request):
+    try:
+        client_id = os.environ.get("NAVER_ID")
+        client_secret = os.environ.get("NAVER_SECRET")
+        code = request.GET.get("code")
+        state = request.GET.get("state")
+        token_request = requests.get(
+            f"https://nid.naver.com/oauth2.0/token?grant_type=authorization_code&client_id={client_id}&client_secret={client_secret}&code={code}&state={state}"
+        )
+        token_json = token_request.json()
+
+        error = token_json.get("error", None)
+        if error is not None:
+            raise NaverException("Can't get authorization code")
+        access_token = token_json.get("access_token")
+        profile_request = requests.get(
+            "https://openapi.naver.com/v1/nid/me",
+            headers={"Authorization": f"Bearer {access_token}"},
+        )
+        profile_json = profile_request.json()
+        email = profile_json.get("response").get("email", None)
+        nickname = profile_json.get("response").get("nickname", None)
+        if email is None:
+            raise NaverException()
+        if nickname is None:
+            nickname = profile_json.get("response").get("name")
+        try:
+            user = models.User.objects.get(email=email)
+            if user.login_method != models.User.LOGIN_NAVER:
+                raise NaverException()
+        except models.User.DoesNotExist:
+            user = models.User.objects.create(
+                email=email,
+                username=email,
+                first_name=nickname,
+                login_method=models.User.LOGIN_NAVER,
+                email_verified=True,
+            )
+            user.set_unusable_password()
+            user.save()
+        messages.success(request, f"Welcome back {user.first_name}")
+        login(request, user)
+        return redirect(reverse("core:home"))
+    except NaverException as e:
         messages.error(request, e)
         return redirect(reverse("users:login"))
 
