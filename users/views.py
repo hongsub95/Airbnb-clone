@@ -229,10 +229,11 @@ def Naver_callback(request):
     try:
         client_id = os.environ.get("NAVER_ID")
         client_secret = os.environ.get("NAVER_SECRET")
+        redirect_uri = "http://airbnb-clone.eba-mbuktp8e.ap-northeast-2.elasticbeanstalk.com/users/login/naver/callback"
         code = request.GET.get("code")
         state = request.GET.get("state")
         token_request = requests.get(
-            f"https://nid.naver.com/oauth2.0/token?grant_type=authorization_code&client_id={client_id}&client_secret={client_secret}&code={code}&state={state}"
+            f"https://nid.naver.com/oauth2.0/token?grant_type=authorization_code&client_id={client_id}&client_secret={client_secret}&redirect_uri={redirect_uri}&code={code}&state={state}"
         )
         token_json = token_request.json()
 
